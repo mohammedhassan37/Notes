@@ -108,3 +108,134 @@ This creates a grid of **5 columns and 3 rows**, with a `1.5rem` gap between eac
 ---
 
 ![image](https://github.com/user-attachments/assets/4b325bdb-071b-4d10-8a36-b10c52d9b185)
+
+---
+
+### FA icons
+
+**step 1: Import**
+
+```import { FaShoppingBasket } from 'react-icons/fa';```
+
+{} is subject to change depending on the icons you want
+
+**step 2: implementing**
+
+```<Link className="nav-items basket" to="/basket"><FaShoppingBasket/></Link> ```
+<FaShoppingBasket/> 
+
+to intialise it.
+
+---
+
+### Form Submission/validation
+
+**Step 1: import and intialise**
+
+```
+import { useState } from 'react';
+
+function Contact() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    category: '',
+    message: ''
+  });
+```
+Above imports useState from react.
+
+FormData holds all of my values, e.g firstName, and they are all set to blank
+
+SetFormData is a function to update my formData, as in it updates the firstName and etc.
+
+---
+**Step 2: Validation Errors**
+
+```
+  const [errors, setErrors] = useState({});
+```
+Errors: Will hold the errors from the different fields, and uses useState. and useState is empty. i.e there are no errors currently.
+setErrors: will update this state
+
+----
+
+**Step 3: Input changes**
+
+```
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+```
+---
+
+**Step 4: Input changes**
+
+```
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+```
+Defines a function with parameter e (the event).
+
+Extracts name and value from the input that triggered the event.
+
+Updates the formData state by copying the previous values and setting the changed field (name) to the new value.
+
+---
+
+**Step 5: Validation**
+
+```
+  const validate = () => {
+    let tempErrors = {};
+    if (!formData.firstName.trim()) tempErrors.firstName = 'First Name is required';
+    if (!formData.lastName.trim()) tempErrors.lastName = 'Last Name is required';
+    if (!formData.email.trim()) tempErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) tempErrors.email = 'Email is invalid';
+    if (!formData.category.trim()) tempErrors.category = 'Please select a topic';
+    if (!formData.message.trim()) tempErrors.message = 'Message is required';
+    return tempErrors;
+  };
+```
+Checks what has an error/not filled in.
+tempErrors (object) are the errors that you get in the current cycle of form submission
+Lastly it returns tempErrors, until there is nothing empty
+
+
+---
+
+**Step 6: Submit Handler**
+
+```
+  const handleSubmit = e => {
+    e.preventDefault();
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      alert('Your email has been sent.');
+      // Here you could reset form or actually send data
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        category: '',
+        message: ''
+      });
+      setErrors({});
+    }
+  };
+```
+creates a function called handleSubmit with a parameter of e.
+the parameter e, with the help of preventDefault. e.preventDefault doesnt allow the page to refresh when submitted
+const validationErrors = validate uses the validate function
+setErrors(validationErrors) will update the errors inside of validate
+
+then it finally checks if there are any validation errors happening in the validate function. if not it will equal to 0 and then alert user the email has been sent, and sets the formdata back to empty,
+and setErrors to blank once again
